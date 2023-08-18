@@ -13,6 +13,21 @@ def criar_planilha(nome_arquivo):
     dados.to_excel(nome_arquivo, index=False)
 
 
+def registrar_log(dados):
+    nome_arquivo_log = f'logs-{datetime.now().strftime("%Y-%m")}.txt'
+
+    try:
+        with open(nome_arquivo_log, 'a') as log:
+            pass
+    except FileNotFoundError:
+        with open(nome_arquivo_log, "w") as log:
+            log.write("Arquivo de Logs:\n")
+
+    log_entry = f"{datetime.now()} - {dados}"
+    with open(nome_arquivo_log, "a") as log:
+        log.write(log_entry + "\n")
+    
+
 def separa_pares(menu, op):
     texto_limpo = re.sub(r'^\d+-\s*', '', menu[op])
     pares = re.findall(r'(\w+):(I|M)', texto_limpo)
@@ -40,7 +55,9 @@ def adicionar_pessoa(planilha, pessoas):
         dados.loc[index, 'TOTAL'] = dados.loc[index, 'INTEIRA'] * \
             VALOR + dados.loc[index, 'MEIA'] * (VALOR/2)
         dados.to_excel(planilha, index=False)
-    
+
+        registrar_log(dados.loc[index])
+
     print("Registro Salvo!\n")
 
 
@@ -72,7 +89,7 @@ def main():
             adicionar_pessoa(nome_arquivo, separa_pares(opcoes, opcao))
         elif opcao in [4, 5]:
             nova = input("Nome:<Tipo> - ")
-            
+
             menu = opcoes[:]
             menu[opcao] = menu[0] + ", " + nova if opcao == 4 else nova
 
