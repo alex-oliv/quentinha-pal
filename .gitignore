@@ -3,3 +3,8 @@
 .env
 /data/issues.json
 /.vscode
+test.py
+
+# Arquivos gerados
+2023-08.xlsx
+logs-2023-08.txt
